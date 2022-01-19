@@ -15,3 +15,6 @@ new_york_city.csv
 washington.csv
 
 ### Credits
+
+### Changes
+Edited user output messages
