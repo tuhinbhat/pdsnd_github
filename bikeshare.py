@@ -40,7 +40,7 @@ def get_filters():
             break
 
     # TO DO: get user input for month (all, january, february, ... , june)
-    month = 'NA'
+    month = 'NotApplicable'
     if t == 'month' or t == 'both':
         month = (input('\nWhich month would you like data for?\n')).lower()
         while month not in mnth:
@@ -49,11 +49,11 @@ def get_filters():
             exit()
 
     # TO DO: get user input for day of week (all, monday, tuesday, ... sunday)
-    day = 'NA'
+    day = 'NotApplicable'
     if t =='day' or t == 'both':
         day = (input('\nWhich day would you like data for?\n')).lower()
-        while day not in dow:
-            print('Invalid day of the week, Valid days are:', dow)
+        while day not in dayofweek:
+            print('Invalid day of the week, Valid days are:', dayofweek)
             print('Exiting now.')
             exit()
 
@@ -91,24 +91,24 @@ def load_data(city, month, day):
 
     #choosing data filtering method based on user input
     #filter by month if not NA, filter by day if not NA, filter by city and month if both are not NA
-    if (month == 'NA' and day == 'NA'):
+    if (month == 'NotApplicable' and day == 'NotApplicable'):
         a = 1
     else:
-        if month != 'NA':
+        if month != 'NotApplicable':
             dum = -1
             rmindex = []
-            for i in range(0, len(df['month'])-1):  #months and dow
+            for i in range(0, len(df['month'])-1):  #months and dayofweek
                 m = df['month'][i]
                 if not ( m == mnth.index(month)+1):
                     dum += 1
                     rmindex.insert(dum, i)
 
-        if day != 'NA':
+        if day != 'NotApplicable':
             dum = -1
             rmindex = []
-            for i in range(0, len(df['month'])-1):  #months and dow
+            for i in range(0, len(df['month'])-1):  #months and dayofweek
                 d = df['weekday'][i]
-                if not ( d == dow.index(day) ):
+                if not ( d == dayofweek.index(day) ):
                     dum += 1
                     rmindex.insert(dum, i)
 
@@ -125,12 +125,12 @@ def time_stats(df, month, day):
     start_time = time.time()
 
     # display the most common month
-    if month == 'NA':
+    if month == 'NotApplicable':
         common_month = df['month'].mode()[0]
         print("\nThe most common month is: ", common_month)
 
     # display the most common day of week
-    if day == 'NA':
+    if day == 'NotApplicable':
         common_day = df['day'].mode()[0]
         print("\nThe most common day is: ", common_day)
 
@@ -149,12 +149,12 @@ def station_stats(df):
 
     # display most commonly used start station
     #Execute only if column data is available
-    if check_column(hdr,"Start Station"):
+    if check_column(header,"Start Station"):
         common_start_station = df['Start Station'].mode()[0]
         print("\nThe most common start station is: ", common_start_station)
 
     # display most commonly used end station
-    if check_column(hdr,"End Station"):
+    if check_column(header,"End Station"):
         common_end_station = df['End Station'].mode()[0]
         print("\nThe most common end station is: ", common_end_station)
 
@@ -173,7 +173,7 @@ def trip_duration_stats(df):
     start_time = time.time()
 
     # display total travel time
-    if check_column(hdr,"Trip Duration"):
+    if check_column(header,"Trip Duration"):
         total_travel_time = sum(df['Trip Duration'])
         print("\nThe total travel time is {} seconds.".format(total_travel_time))
         # display mean travel time
@@ -190,21 +190,21 @@ def user_stats(df):
     start_time = time.time()
 
     # Display counts of user types
-    if check_column(hdr,"User Type"):
+    if check_column(header,"User Type"):
         user_types_count = df['User Type'].count()
         user_types_unique_count = df['User Type'].value_counts()
         print("\nThe user types count is:", user_types_count)
         print("\nThe unique user types count is:\n", user_types_unique_count)
 
     # Display counts of gender
-    if check_column(hdr,"Gender"):
+    if check_column(header,"Gender"):
         gender_count = df['Gender'].count()
         gender_unique_count = df['Gender'].value_counts()
         print("\nThe gender count is:", gender_count)
         print("\nThe unique gender count is:\n", gender_unique_count)
 
     # Display earliest, most recent, and most common year of birth
-    if check_column(hdr,"Birth Year"):
+    if check_column(header,"Birth Year"):
         earliest_yob = int(min(df['Birth Year']))
         most_recent_yob = int(max(df['Birth Year']))
         common_yob = int(df['Birth Year'].mode()[0])
@@ -215,10 +215,10 @@ def user_stats(df):
     print("\nThe user stats took {:.2e} seconds." .format(time.time() - start_time))
     print('-'*40)
 
-def check_column(hdr, column):
+def check_column(header, column):
     #Checking for availability of column data
     status = True
-    if not column in hdr:
+    if not column in header:
         status = False
         print('Data for {} is not available - Skipping data operation.'.format(column))
     return(status)
@@ -235,15 +235,15 @@ def display_data(df):
             break
 
 def main():
-    global mnth, dow, hdr
+    global mnth, dayofweek, header
     mnth = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
-    dow = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    dayofweek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
         display_data(df)
-    #   hdr = list(df.head(1) #Capturing header and making it global.
-        hdr = np.array(list(df.head(1))) #Capturing header and making it global.
+    #   header = list(df.head(1) #Capturing header and making it global.
+        header = np.array(list(df.head(1))) #Capturing header and making it global.
         time_stats(df, month, day)
         station_stats(df)
         trip_duration_stats(df)
