@@ -23,7 +23,7 @@ def get_filters():
     while city not in CITY_DATA.keys():
         print('There is no data for this city', city)
         print('Valid cities are:', CITY_DATA.keys())
-        print('Exiting now due to invalid city.')
+        print('Exiting now due to invalid city input.')
         exit()
 
     #asking user what filter type they would like.
@@ -34,7 +34,7 @@ def get_filters():
             print('Invalid input type, Valid types are:', input_type)
             restart = input('\nWould you like to restart with a valid value? Enter yes (y) or no (n).\n')
             if ( restart.lower() == 'no' or restart.lower() == 'n' ):
-                print('Exiting now based on user input.')
+                print('Exiting now based on user input choice.')
                 exit()
         else:
             break
