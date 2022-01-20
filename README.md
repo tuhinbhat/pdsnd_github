@@ -17,4 +17,5 @@ washington.csv
 ### Credits
 
 ### Changes
-Edited user output messages
+Edited user output messages.
+Updated the user output messages for clarity.
